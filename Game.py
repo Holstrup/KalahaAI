@@ -1,5 +1,7 @@
 import random
 import time
+from copy import copy, deepcopy
+
 
 class Kalaha:
 
@@ -10,56 +12,54 @@ class Kalaha:
         self.board_size = 6
         self.stones = 4
 
-
         """
         State and variables
         """
-        self.state = [[self.stones]*self.board_size, [self.stones]*self.board_size, [0,0]]
+        self.state = [[self.stones] * self.board_size, [self.stones] * self.board_size, [0, 0]]
 
         self.player1 = 0
         self.player2 = 1
 
+    def terminal_test(self, state):
+        return sum(state[0]) == 0 or sum(state[1]) == 0
 
+    def finalize_game(self, state=None, game_over=False):
+        # if game_over==True then state=self.state
+        if game_over:
+            state = self.state
+        if sum(state[0]) == 0:
+            print(sum(state[1]))
+            state[2][1] += sum(state[1])
+            state[1] = [0] * self.board_size
+        elif sum(state[1]) == 0:
+            state[2][0] += sum(state[0])
+            state[0] = [0] * self.board_size
+        return state
 
-    def terminal_test(self):
-        return sum(self.state[0]) == 0 or sum(self.state[1]) == 0
-
-
-    def finalize_game(self):
-        if sum(self.state[0]) == 0:
-            print(sum(self.state[1]))
-            self.state[2][1] += sum(self.state[1])
-            self.state[1] = [0] * self.board_size
-        elif sum(self.state[1]) == 0:
-            self.state[2][0] += sum(self.state[0])
-            self.state[0] = [0] * self.board_size
-
-
-
-    def print_board(self):
+    def print_board(self,state):
         print("\n")
-        print(" "*2 + "-"*13)
-        print(" | " + "|".join(str(hole) for hole in reversed(self.state[self.player2])) + " | ")
+        print(" " * 2 + "-" * 13)
+        print(" | " + "|".join(str(hole) for hole in reversed(state[self.player2])) + " | ")
 
-        print(str(self.state[2][self.player2]) + "|" + " " * 13 + "|" + str(self.state[2][self.player1]))
+        print(str(state[2][self.player2]) + "|" + " " * 13 + "|" + str(state[2][self.player1]))
 
-        print(" | " + "|".join(str(hole) for hole in self.state[self.player1]) + " | ")
+        print(" | " + "|".join(str(hole) for hole in state[self.player1]) + " | ")
         print(" " * 2 + "-" * 13)
         print("\n")
-        print("-"*10)
+        print("-" * 10)
 
-
-    def possible_actions(self, player):
+    def possible_actions(self, player,state):
         possible_holes = []
-        for i, hole in enumerate(self.state[player]):
+        for i, hole in enumerate(state[player]):
             if hole > 0:
                 possible_holes.append(i)
         return possible_holes
 
+    def take(self, player, hole, state):
+        new_state = deepcopy(state)
 
-    def take(self, player, hole):
-        stones = self.state[player][hole]
-        self.state[player][hole] = 0
+        stones = new_state[player][hole]
+        new_state[player][hole] = 0
 
         row = player
 
@@ -68,7 +68,7 @@ class Kalaha:
 
             # If we need to go from one row to the other (at the end of a row)
             if hole == self.board_size and self.stones > 0:
-                self.state[2][row] += 1
+                new_state[2][row] += 1
                 stones -= 1
                 if row == 1:
                     row = 0
@@ -78,30 +78,95 @@ class Kalaha:
 
                 if stones > 0:
                     stones -= 1
-                    self.state[row][hole] += 1
+                    new_state[row][hole] += 1
 
                 # If we put the last stone in our mancala -> Same player goes again
                 else:
-                    return True
+                    return new_state, True
 
             else:
 
                 # If 1 stone left and next hole is empty and youre on your own side of the board
-                if stones == 1 and self.state[row][hole] == 0 and row == player:
-                    self.state[row][hole] += 1
+                if stones == 1 and new_state[row][hole] == 0 and row == player:
+                    new_state[row][hole] += 1
                     stones -= 1
 
                     # Get all stones from opposite hole
                     if row == player:
                         if player == 0:
-                            self.state[2][player] += self.state[1][5 - hole]
-                            self.state[1][5 - hole] = 0
+                            new_state[2][player] += new_state[1][5 - hole]
+                            new_state[1][5 - hole] = 0
                         else:
-                            self.state[2][player] += self.state[0][5 - hole]
-                            self.state[0][5 - hole] = 0
+                            new_state[2][player] += new_state[0][5 - hole]
+                            new_state[0][5 - hole] = 0
                 elif stones > 0:
-                    self.state[row][hole] += 1
+                    new_state[row][hole] += 1
                     stones -= 1
 
+        return new_state, False
+
+    def set_state(self, new_state):
+        self.state = new_state
+
+    def get_state(self):
+        return self.state
+
+    def evaluate(self, state, player, opponent):
+        return state[2][player] - state[2][opponent]
+
+    def get_children(self, player,state):
+
+        children_spaces = []
+
+        for move in self.possible_actions(player,state):
+            children_spaces.append(self.take(player, move,state))
+
+        return children_spaces
+
+    def minimax(self, state, player, opponent, depth):
+        print("_______ NEW CALL _______ ")
+        print("depth: {0}".format(depth))
+        self.print_board(state)
+        if self.terminal_test(state):
+            self.finalize_game(state=state)
+            print("TERMINAL")
+            return self.evaluate(state,player, opponent)
+        elif depth == 0:
+            print("Depth ==0")
+            return self.evaluate(state,player, opponent)
+
+        elif player == self.player2: #If ai agent go for max difference
+            print("Ai agent turn")
+            best_val = -1000
+            children_states = self.get_children(player,state)
+
+            for child in children_states:
+                child_state=child[0]
+
+                go_again=child[1]
+
+                val = self.minimax(child_state, opponent, player, depth - 1)
+
+                best_val = max(best_val, val)
+                print("_"*10)
+            return best_val
+
+        elif player == self.player1:
+
+            print("players turn")
+            best_val = 1000
+            children_states = self.get_children(player,state)
+
+            for child in children_states:
+
+                child_state = child[0]
+
+                go_again = child[1]
+
+                val = self.minimax(child_state, opponent, player, depth - 1)
+
+                best_val = min(best_val, val)
+                print("_" * 10)
+            return best_val
 
 
