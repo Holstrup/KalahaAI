@@ -1,4 +1,5 @@
 import random
+import time
 
 class Kalaha:
 
@@ -7,7 +8,7 @@ class Kalaha:
         Parameters
         """
         self.board_size = 6
-        self.stones = 1
+        self.stones = 4
 
 
         """
@@ -20,13 +21,30 @@ class Kalaha:
 
 
 
+    def terminal_test(self):
+        return sum(self.state[0]) == 0 or sum(self.state[1]) == 0
+
+
+    def finalize_game(self):
+        if sum(self.state[0]) == 0:
+            print(sum(self.state[1]))
+            self.state[2][1] += sum(self.state[1])
+            self.state[1] = [0] * self.board_size
+        elif sum(self.state[1]) == 0:
+            self.state[2][0] += sum(self.state[0])
+            self.state[0] = [0] * self.board_size
+
+
+
     def print_board(self):
         print("\n")
+        print(" "*2 + "-"*13)
         print(" | " + "|".join(str(hole) for hole in reversed(self.state[self.player2])) + " | ")
 
         print(str(self.state[2][self.player2]) + "|" + " " * 13 + "|" + str(self.state[2][self.player1]))
 
         print(" | " + "|".join(str(hole) for hole in self.state[self.player1]) + " | ")
+        print(" " * 2 + "-" * 13)
         print("\n")
         print("-"*10)
 
@@ -85,38 +103,5 @@ class Kalaha:
                     self.state[row][hole] += 1
                     stones -= 1
 
-
-    def run_game(self):
-        player = self.player1
-
-        for i in range(10):
-
-            if player == self.player1:
-                hole = int(input())
-                print("Player Chooses Hole {}".format(hole))
-
-                same_player = self.take(player, hole)
-                if not same_player:
-                    player = self.player2
-                else:
-                    print("Player Goes Again")
-
-            else:
-                hole = random.randint(0,5) # <- AI agents action goes here
-                print("Agent Chooses Hole {}".format(hole))
-                same_player = self.take(player, hole)
-                if not same_player:
-                    player = self.player1
-                else:
-                    print("Agent Goes Again")
-
-            self.print_board()
-
-
-
-
-k = Kalaha()
-k.print_board()
-k.run_game()
 
 
