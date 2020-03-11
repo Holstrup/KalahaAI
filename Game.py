@@ -46,7 +46,7 @@ class Kalaha:
         print(" | " + "|".join(str(hole) for hole in state[self.player1]) + " | ")
         print(" " * 2 + "-" * 13)
         print("\n")
-        print("-" * 10)
+        #print("-" * 10)
 
     def possible_actions(self, player,state):
         possible_holes = []
@@ -112,6 +112,8 @@ class Kalaha:
         return self.state
 
     def evaluate(self, state, player, opponent):
+        print("player {0}. opponent: {1}. state: {2}. Score: {3}".format(player,opponent,state,state[2][player] - state[2][opponent]))
+        print("____________")
         return state[2][player] - state[2][opponent]
 
     def get_children(self, player,state):
@@ -124,49 +126,53 @@ class Kalaha:
         return children_spaces
 
     def minimax(self, state, player, opponent, depth):
-        print("_______ NEW CALL _______ ")
+        print("Player {0}'s turn".format(player))
+
         print("depth: {0}".format(depth))
-        self.print_board(state)
         if self.terminal_test(state):
             self.finalize_game(state=state)
             print("TERMINAL")
             return self.evaluate(state,player, opponent)
         elif depth == 0:
-            print("Depth ==0")
+
             return self.evaluate(state,player, opponent)
 
         elif player == self.player2: #If ai agent go for max difference
-            print("Ai agent turn")
+
             best_val = -1000
-            children_states = self.get_children(player,state)
 
-            for child in children_states:
-                child_state=child[0]
+            moves = self.possible_actions(player,state)
 
-                go_again=child[1]
+            for move in moves:
 
-                val = self.minimax(child_state, opponent, player, depth - 1)
+                new_state,go_again=self.take(player,move,state)
+                self.print_board(new_state)
+
+                val = self.minimax(new_state, opponent, player, depth - 1)
+
 
                 best_val = max(best_val, val)
-                print("_"*10)
+
+            print("BEST VALUE: {0}  FOR VALUE {1} for player{2}".format(best_val,depth,player))
+
             return best_val
 
         elif player == self.player1:
 
-            print("players turn")
+
             best_val = 1000
-            children_states = self.get_children(player,state)
+            moves = self.possible_actions(player, state)
 
-            for child in children_states:
+            for move in moves:
+                new_state, go_again = self.take(player, move, state)
+                print(move)
+                self.print_board(new_state)
 
-                child_state = child[0]
-
-                go_again = child[1]
-
-                val = self.minimax(child_state, opponent, player, depth - 1)
+                val = self.minimax(new_state, opponent, player, depth - 1)
 
                 best_val = min(best_val, val)
-                print("_" * 10)
+            print("BEST VALUE: {0}  FOR VALUE {1} for player{2}".format(best_val, depth, player))
+
             return best_val
 
 
