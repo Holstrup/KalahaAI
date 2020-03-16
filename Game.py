@@ -113,12 +113,9 @@ class Kalaha:
     def get_state(self):
         return self.state
 
-    def evaluate(self, state, player, opponent):
-        print("Player{0}: {1}    Player {2}: {3}".format(player, state[2][player],opponent,state[2][opponent]))
-        if player==0:
-            return state[2][opponent] - state[2][player]
-        else:
-            return state[2][player] - state[2][opponent]
+    def evaluate(self, state):
+
+            return state[2][self.player2] - state[2][self.player1]
 
 
 
@@ -135,15 +132,15 @@ class Kalaha:
         return self.best_move
 
 
-    def minimax(self, state, player, opponent, depth):
+    def minimax(self, state, player,opponent, depth):
         print("Depth:{0}".format(depth))
         if self.terminal_test(state):
             print("Terminated")
             self.finalize_game(state=state)
-            return self.evaluate(state,player, opponent)
+            return self.evaluate(state)
         elif depth == 0:
             print("Evaluating for player:{0}".format(player))
-            return self.evaluate(state,player, opponent)
+            return self.evaluate(state)
 
         elif player == self.player2: #If ai agent go for max difference
             print("Player agent:")
@@ -185,6 +182,7 @@ class Kalaha:
                     val = self.minimax(new_state, opponent, player, depth - 1)
 
                 print("Checking for min. Best: {0}    val: {1}".format(best_val,val))
+
                 best_val = min(best_val, val)
 
             print("Depth: {0} best_val{1}".format(depth,best_val))

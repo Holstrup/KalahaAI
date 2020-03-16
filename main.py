@@ -39,6 +39,7 @@ def play(human = False, delay = 0):
                 print("Agent Goes Again")
 
         else:
+
             game.minimax(game.get_state(),player,game.player1,3)
             best_move=game.get_best_move()
 
@@ -52,6 +53,7 @@ def play(human = False, delay = 0):
                 print("Agent Goes Again")
 
 
+        input(")")
         game.print_board(game.get_state())
 
     #When one player runs out of stones
