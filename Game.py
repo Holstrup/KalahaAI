@@ -20,6 +20,8 @@ class Kalaha:
         self.player1 = 0
         self.player2 = 1
 
+        self.best_move = None
+
     def terminal_test(self, state):
         return sum(state[0]) == 0 or sum(state[1]) == 0
 
@@ -112,9 +114,13 @@ class Kalaha:
         return self.state
 
     def evaluate(self, state, player, opponent):
-        print("player {0}. opponent: {1}. state: {2}. Score: {3}".format(player,opponent,state,state[2][player] - state[2][opponent]))
-        print("____________")
-        return state[2][player] - state[2][opponent]
+        print("Player{0}: {1}    Player {2}: {3}".format(player, state[2][player],opponent,state[2][opponent]))
+        if player==0:
+            return state[2][opponent] - state[2][player]
+        else:
+            return state[2][player] - state[2][opponent]
+
+
 
     def get_children(self, player,state):
 
@@ -125,20 +131,22 @@ class Kalaha:
 
         return children_spaces
 
-    def minimax(self, state, player, opponent, depth):
-        print("Player {0}'s turn".format(player))
+    def get_best_move(self):
+        return self.best_move
 
-        print("depth: {0}".format(depth))
+
+    def minimax(self, state, player, opponent, depth):
+        print("Depth:{0}".format(depth))
         if self.terminal_test(state):
+            print("Terminated")
             self.finalize_game(state=state)
-            print("TERMINAL")
             return self.evaluate(state,player, opponent)
         elif depth == 0:
-
+            print("Evaluating for player:{0}".format(player))
             return self.evaluate(state,player, opponent)
 
         elif player == self.player2: #If ai agent go for max difference
-
+            print("Player agent:")
             best_val = -1000
 
             moves = self.possible_actions(player,state)
@@ -147,32 +155,39 @@ class Kalaha:
 
                 new_state,go_again=self.take(player,move,state)
                 self.print_board(new_state)
-
-                val = self.minimax(new_state, opponent, player, depth - 1)
-
+                if go_again:
+                    val = self.minimax(new_state, player, opponent, depth - 1)
+                else:
+                    val = self.minimax(new_state, opponent, player, depth - 1)
+                print("Checking for max. Best: {0}    val: {1}".format(best_val, val))
+                if val>best_val:
+                    self.best_move = move
+                    print("BEST move: {0}".format(move))
 
                 best_val = max(best_val, val)
 
-            print("BEST VALUE: {0}  FOR VALUE {1} for player{2}".format(best_val,depth,player))
-
+            print("Depth: {0} best_val{1}".format(depth, best_val))
             return best_val
 
         elif player == self.player1:
-
-
+            print("Player one:")
             best_val = 1000
+
             moves = self.possible_actions(player, state)
 
             for move in moves:
+
                 new_state, go_again = self.take(player, move, state)
-                print(move)
                 self.print_board(new_state)
+                if go_again:
+                    val = self.minimax(new_state, player, opponent, depth - 1)
+                else:
+                    val = self.minimax(new_state, opponent, player, depth - 1)
 
-                val = self.minimax(new_state, opponent, player, depth - 1)
-
+                print("Checking for min. Best: {0}    val: {1}".format(best_val,val))
                 best_val = min(best_val, val)
-            print("BEST VALUE: {0}  FOR VALUE {1} for player{2}".format(best_val, depth, player))
 
+            print("Depth: {0} best_val{1}".format(depth,best_val))
             return best_val
 
 
