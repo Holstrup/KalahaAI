@@ -1,4 +1,4 @@
-from Game import Kalaha
+from KalahaAI.Game import Kalaha
 import random
 import time
 
