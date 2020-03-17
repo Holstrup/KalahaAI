@@ -10,7 +10,6 @@ class Kalaha:
         self.board_size = 6
         self.stones = 4
 
-
         """
         State and variables
         """

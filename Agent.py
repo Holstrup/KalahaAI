@@ -5,7 +5,7 @@ import numpy as np
 
 class Agent:
     def __init__(self):
-        self.search_depth = 4
+        self.search_depth = 6
 
     def evaluate(self, state):
         """
@@ -60,6 +60,57 @@ class Agent:
             best_move = game.possible_actions()[np.argmin(values)]
             return best_move, best_value
 
-    def find_next_move(self, game):
-        next_move, _ = self.minimax(game, self.search_depth)
+    def minimax_ab(self, game, depth, alpha=-100, beta=100):
+        player = game.state[3]
+
+        if game.terminal_test() or depth == 0:
+            return None, self.evaluate(game.state)
+
+        # Max Player
+        elif player == 0:
+            moves = game.possible_actions()
+            child_games = self.children(game)
+
+            best_value = -100
+            best_move = None
+
+            for i, child in enumerate(child_games):
+
+                _, value = self.minimax_ab(child, depth - 1, alpha=alpha, beta=beta)
+                best_value = max(best_value, value)
+                if best_value > alpha:
+                    alpha = best_value
+                    best_move = moves[i]
+
+                if beta <= alpha:
+                    break
+
+            return best_move, best_value
+
+        # Min Player
+        elif player == 1:
+            moves = game.possible_actions()
+            child_games = self.children(game)
+
+            best_value = 100
+            best_move = None
+
+            for i, child in enumerate(child_games):
+
+                move, value = self.minimax_ab(child, depth - 1, alpha=alpha, beta=beta)
+                best_value = min(best_value, value)
+                if best_value < beta:
+                    beta = best_value
+                    best_move = moves[i]
+
+                if beta <= alpha:
+                    break
+
+            return best_move, best_value
+
+    def find_next_move(self, game, pruning=False):
+        if pruning:
+            next_move, _ = self.minimax_ab(game, self.search_depth)
+        else:
+            next_move, _ = self.minimax(game, self.search_depth)
         return next_move
