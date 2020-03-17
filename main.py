@@ -24,6 +24,7 @@ def play(human = False, delay = 0):
             new_state,same_player = game.take(player, hole,game.get_state())
             game.set_state(new_state)
             if not same_player:
+
                 player = game.player2
             else:
                 print("Player Goes Again")
@@ -34,26 +35,29 @@ def play(human = False, delay = 0):
             new_state,same_player = game.take(player, hole,game.get_state())
             game.set_state(new_state)
             if not same_player:
+
                 player = game.player2
+
             else:
                 print("Agent Goes Again")
 
         else:
+            depth = 3
+            game.minimax(game.get_state(),True,depth,float("-inf"),float("inf"))
+            best_move=game.get_best_move(depth)
 
-            game.minimax(game.get_state(),player,game.player1,3)
-            best_move=game.get_best_move()
 
-            #hole = random.choice(game.possible_actions(player,game.get_state()))  # <- AI agents action goes here
             print("Agent 2 Chooses Hole {}".format(best_move))
             new_state,same_player = game.take(player, best_move,game.get_state())
             game.set_state(new_state)
             if not same_player:
+
                 player = game.player1
             else:
                 print("Agent Goes Again")
 
 
-        input(")")
+
         game.print_board(game.get_state())
 
     #When one player runs out of stones
