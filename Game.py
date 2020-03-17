@@ -30,7 +30,6 @@ class Kalaha:
         if game_over:
             state = self.state
         if sum(state[0]) == 0:
-            print(sum(state[1]))
             state[2][1] += sum(state[1])
             state[1] = [0] * self.board_size
         elif sum(state[1]) == 0:
@@ -126,10 +125,12 @@ class Kalaha:
         return children_spaces
 
     def get_best_move(self,key):
-        print(self.best_move)
-        return self.best_move[key]
+        if key == 0:
+            return 0
+        else:
+            return self.best_move[key]
 
-    def minimax(self, state, maximizing_player, depth,alpha,beta):
+    def minimax(self, state, maximizing_player, depth,alpha,beta,pruning):
 
         if self.terminal_test(state):
 
@@ -150,7 +151,7 @@ class Kalaha:
 
                 new_state,go_again = self.take(self.player2,move,state)
 
-                val = self.minimax(new_state, go_again, depth - 1,alpha,beta)
+                val = self.minimax(new_state, go_again, depth - 1,alpha,beta,pruning)
 
                 if val>best_val:
                     self.best_move[depth] = move
@@ -158,11 +159,9 @@ class Kalaha:
                 #self.print_board(new_state)
                 alpha = max(alpha, best_val)
 
-                if beta <= alpha:
+                if beta <= alpha and pruning:
 
                     break
-
-
             return best_val
 
         elif not maximizing_player:
@@ -175,14 +174,14 @@ class Kalaha:
 
                 new_state, go_again = self.take(self.player1, move, state)
 
-                val = self.minimax(new_state, not go_again, depth - 1,alpha,beta)
+                val = self.minimax(new_state, not go_again, depth - 1,alpha,beta,pruning)
 
                 best_val = min(best_val, val)
                 #self.print_board(new_state)
 
                 beta = min(beta, best_val)
 
-                if beta <= alpha:
+                if beta <= alpha and pruning:
 
                     break
 
