@@ -108,12 +108,12 @@ class Kalaha:
                     # Get all stones from opposite hole
                     if row == player:
                         if player == 0:
-                            self.state[2][player] += self.state[1][5 - hole]
-                            self.state[1][5 - hole] = 0
+                            self.state[2][player] += self.state[1][self.board_size - 1 - hole]
+                            self.state[1][self.board_size - 1 - hole] = 0
                             self.state[3] = int(not player)
                         else:
-                            self.state[2][player] += self.state[0][5 - hole]
-                            self.state[0][5 - hole] = 0
+                            self.state[2][player] += self.state[0][self.board_size - 1 - hole]
+                            self.state[0][self.board_size - 1 - hole] = 0
                             self.state[3] = int(not player)
 
                 elif stones > 0:

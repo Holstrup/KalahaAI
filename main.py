@@ -2,6 +2,7 @@ from Game import Kalaha
 import time
 import copy
 from Agent import Agent
+import random
 
 def main(human = False, delay = 0):
     game = Kalaha(starting_player=0)
@@ -21,12 +22,14 @@ def main(human = False, delay = 0):
         elif player == game.player1:
             game_copy = copy.deepcopy(game)
             hole = ai_1.find_next_move(game_copy)
+            # hole = random.choice(game.possible_actions())
             print("Agent 1 Chooses Hole {}".format(hole))
             game.take(hole)
 
         else:
             game_copy = copy.deepcopy(game)
             hole = ai_2.find_next_move(game_copy) # <- AI agents action goes here
+            # hole = random.choice(game.possible_actions())
             print("Agent 2 Chooses Hole {}".format(hole))
             game.take(hole)
 

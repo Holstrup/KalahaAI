@@ -5,7 +5,7 @@ import numpy as np
 
 class Agent:
     def __init__(self):
-        self.search_depth = 6
+        self.search_depth = 5
 
     def evaluate(self, state):
         """
