@@ -17,17 +17,13 @@ class State:
         return child_states
 
     def evaluate(self):
-        return max(self.state[2][0] - self.state[2][1],0)
+        if self.state[2][0] - self.state[2][1] > 0:
+            return 0
+        else:
+            return 1
 
     def is_terminal_state(self):
         return sum(self.state[0]) == 0 or sum(self.state[1]) == 0
-
-
-    #def evaluate(self):
-    #    if self.state[2][0] > self.state[2][1]:
-    #        return 1
-    #    else:
-    #        return 0
 
 
     def finalize_game(self):

@@ -3,7 +3,7 @@ import random
 class Node:
     def __init__(self, parent, game_state):
         """Hyper Parameter"""
-        self.ee_parameter = 10
+        self.ee_parameter = 2 ** (1/2)
 
         """ Init """
         self.parent = parent
@@ -43,33 +43,24 @@ class Node:
         return selected_node
 
 
-    """
-    def expand(self):
-        if len(self.child_nodes) == 0:
-            child_states = self.state.compute_child_states()
-            for state in child_states:
-                self.child_nodes.append(Node(self, state))
-    """
-
 
     def backpropagate(self, r):
         self.n += 1
-        self.r += r
+
+        if self.state.state[3] != r:
+            self.r += 1
+
         if self.parent is not None:
             self.parent.backpropagate(r)
 
     def ucb(self, child):
         if child.n is not 0:
-            return child.r / child.n + self.ee_parameter * (2 * math.log(self.n) / child.n)**(1/2)
+            return child.r / child.n + self.ee_parameter * (math.log(self.n) / child.n)**(1/2)
         else:
             return 10 ** 5
 
     def isLeaf(self):
         return len(self.child_nodes) == 0
-        #if len(self.child_nodes) > 0:
-        #    return False
-        #else:
-            #return len(self.state.compute_child_states()) == 0
 
 
 
