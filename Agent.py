@@ -5,14 +5,9 @@ import numpy as np
 
 class Agent:
     def __init__(self):
-        self.search_depth = 5
+        self.search_depth = 6
 
-    def evaluate(self, state):
-        """
-        :param state: Game State
-        :return: Evaluated score based on heuristic
-        """
-        return state[2][0] - state[2][1]
+
 
     def children(self, curr_game):
         """
