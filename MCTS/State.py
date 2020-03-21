@@ -19,6 +19,9 @@ class State:
     def evaluate(self):
         return max(self.state[2][0] - self.state[2][1],0)
 
+    def is_terminal_state(self):
+        return sum(self.state[0]) == 0 or sum(self.state[1]) == 0
+
 
     #def evaluate(self):
     #    if self.state[2][0] > self.state[2][1]:

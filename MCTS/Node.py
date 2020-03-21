@@ -3,7 +3,7 @@ import random
 class Node:
     def __init__(self, parent, game_state):
         """Hyper Parameter"""
-        self.ee_parameter = 2
+        self.ee_parameter = 10
 
         """ Init """
         self.parent = parent
@@ -26,18 +26,30 @@ class Node:
         random_child_state.finalize_game()
         return random_child_state.evaluate()
 
+    def is_fully_expanded(self):
+        possible_child_nodes = self.state.compute_child_states()
+        return len(possible_child_nodes) == len(self.child_nodes)
 
+
+    def expand(self):
+        child_states = self.state.compute_child_states()
+        selected_state = child_states[len(self.child_nodes)]
+        selected_node = Node(self, selected_state)
+
+        if selected_node.state.is_terminal_state():
+            selected_node.state.finalize_game()
+
+        self.child_nodes.append(selected_node)
+        return selected_node
+
+
+    """
     def expand(self):
         if len(self.child_nodes) == 0:
             child_states = self.state.compute_child_states()
             for state in child_states:
                 self.child_nodes.append(Node(self, state))
-
-    #def expand(self):
-    #    child_states = self.state.compute_child_states()
-    #    if len(self.child_nodes) != len(child_states):
-    #        selected_state = child_states[len(self.child_nodes)]
-    #        self.child_nodes.append(Node(self, selected_state))
+    """
 
 
     def backpropagate(self, r):
@@ -48,7 +60,7 @@ class Node:
 
     def ucb(self, child):
         if child.n is not 0:
-            return child.r / child.n + self.ee_parameter * (math.log(self.n) / child.n)**(1/2)
+            return child.r / child.n + self.ee_parameter * (2 * math.log(self.n) / child.n)**(1/2)
         else:
             return 10 ** 5
 
