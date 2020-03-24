@@ -20,7 +20,7 @@ class Kalaha:
         self.player1 = 0
         self.player2 = 1
 
-        self.best_move = {}
+
 
     def terminal_test(self, state):
         return sum(state[0]) == 0 or sum(state[1]) == 0
@@ -47,7 +47,7 @@ class Kalaha:
         print(" | " + "|".join(str(hole) for hole in state[self.player1]) + " | ")
         print(" " * 2 + "-" * 13)
         print("\n")
-        #print("-" * 10)
+        print("-" * 10)
 
     def possible_actions(self, player,state):
         possible_holes = []
@@ -68,13 +68,18 @@ class Kalaha:
             hole += 1
 
             # If we need to go from one row to the other (at the end of a row)
-            if hole == self.board_size and self.stones > 0:
-                new_state[2][row] += 1
-                stones -= 1
+            if hole == self.board_size:
+                # Put stone in players Mancala Store
+                if row == player:
+                    new_state[2][row] += 1
+                    stones -= 1
+
+
                 if row == 1:
                     row = 0
                 else:
                     row = 1
+
                 hole = 0
 
                 if stones > 0:
@@ -83,6 +88,7 @@ class Kalaha:
 
                 # If we put the last stone in our mancala -> Same player goes again
                 else:
+
                     return new_state, True
 
             else:
@@ -112,80 +118,9 @@ class Kalaha:
     def get_state(self):
         return self.state
 
-    def evaluate(self, state):
-            return state[2][self.player2] - state[2][self.player1]
-
-    def get_children(self, player,state):
-
-        children_spaces = []
-
-        for move in self.possible_actions(player,state):
-            children_spaces.append(self.take(player, move,state))
-
-        return children_spaces
-
-    def get_best_move(self,key):
-        if key == 0:
-            return 0
-        else:
-            return self.best_move[key]
-
-    def minimax(self, state, maximizing_player, depth,alpha,beta,pruning):
-
-        if self.terminal_test(state):
-
-            self.finalize_game(state=state)
-            return self.evaluate(state)
-
-        elif depth == 0:
-
-            return self.evaluate(state)
-
-        elif maximizing_player:
-
-            best_val = float("-inf")
-
-            moves = self.possible_actions(self.player2,state)
-
-            for move in moves:
-
-                new_state,go_again = self.take(self.player2,move,state)
-
-                val = self.minimax(new_state, go_again, depth - 1,alpha,beta,pruning)
-
-                if val>best_val:
-                    self.best_move[depth] = move
-                best_val = max(best_val, val)
-                #self.print_board(new_state)
-                alpha = max(alpha, best_val)
-
-                if beta <= alpha and pruning:
-
-                    break
-            return best_val
-
-        elif not maximizing_player:
-
-            best_val = float("inf")
-
-            moves = self.possible_actions(self.player1, state)
-
-            for move in moves:
-
-                new_state, go_again = self.take(self.player1, move, state)
-
-                val = self.minimax(new_state, not go_again, depth - 1,alpha,beta,pruning)
-
-                best_val = min(best_val, val)
-                #self.print_board(new_state)
-
-                beta = min(beta, best_val)
-
-                if beta <= alpha and pruning:
-
-                    break
 
 
-            return best_val
+
+
 
 

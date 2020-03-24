@@ -1,3 +1,6 @@
+from copy import deepcopy
+
+from AI_Agent import AI
 from Game import Kalaha
 import random
 import time
@@ -6,19 +9,15 @@ def play(human = False, delay = 0):
     game = Kalaha()
     player = game.player1
 
-
     while not game.terminal_test(game.get_state()):
         time.sleep(delay)
 
         if player == game.player1 and human:
-            hole=-1
-
+            hole = -1
             #Let player choose until valid move
             while hole not in game.possible_actions(player,game.get_state()):
                 print(game.possible_actions(player,game.get_state()))
                 hole = int(input("Please choose hole: "))
-
-
             print("Player Chooses Hole {}".format(hole))
 
             new_state,same_player = game.take(player, hole,game.get_state())
@@ -30,21 +29,25 @@ def play(human = False, delay = 0):
                 print("Player Goes Again")
 
         elif player == game.player1:
-            hole = random.choice(game.possible_actions(player,game.get_state())) # <- AI agents action goes here
-            print("Agent 1 Chooses Hole {}".format(hole))
-            new_state,same_player = game.take(player, hole,game.get_state())
+            #input of AI is depth of minimax
+            agent = AI(6)
+            game_copy = deepcopy(game)
+            best_move = agent.get_best_move(game_copy, game.get_state(), False,True)
+
+            print("Agent 1 Chooses Hole {}".format(best_move))
+            new_state, same_player = game.take(player, best_move, game.get_state())
             game.set_state(new_state)
             if not same_player:
-
                 player = game.player2
 
             else:
                 print("Agent Goes Again")
 
         else:
-            depth = 3
-            game.minimax(game.get_state(),True,depth,float("-inf"),float("inf"))
-            best_move=game.get_best_move(depth)
+            # input of AI is depth of minimax
+            agent = AI(6)
+            game_copy=deepcopy(game)
+            best_move=agent.get_best_move(game_copy,game.get_state(),True,True)
 
 
             print("Agent 2 Chooses Hole {}".format(best_move))
@@ -68,4 +71,4 @@ def play(human = False, delay = 0):
 
 
 if __name__ == "__main__":
-    play(True,delay=1)
+    play(human=True,delay=1)
