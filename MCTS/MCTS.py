@@ -1,5 +1,5 @@
-from State import State
-from Node import Node
+from MCTS.State import State
+from MCTS.Node import Node
 import numpy as np
 
 
@@ -29,7 +29,6 @@ class MCTS:
     def MCTS(self, n0):
         n1 = self.tree_policy(n0)
         reward = n1.rollout()
-        #print("Rollout on", n1.state.state, reward)
         n1.backpropagate(reward)
 
     def most_promising_child(self, current_node):
@@ -58,7 +57,7 @@ class MCTS:
         else:
             nodes = []
             for child in node.child_nodes:
-                nodes.append(self.noNodes(child))
+                nodes.append(self.no_nodes(child))
             return sum(nodes) + 1
 
     def max_path(self, node, states):
@@ -78,7 +77,7 @@ class MCTS:
                 hole = i
         return hole, most_visited_child
 
-
+"""
 
 # 1
 print("MOVE 1")
@@ -95,7 +94,7 @@ for child in mcts.root_node.child_nodes:
 print("\n")
 
 print("Max depth is {}".format(mcts.depth(mcts.root_node)))
-print("Nodes explored: {}".format(mcts.noNodes(mcts.root_node)))
+print("Nodes explored: {}".format(mcts.no_nodes(mcts.root_node)))
 
 state_path = mcts.max_path(mcts.root_node, [])
 
@@ -126,7 +125,7 @@ for child in mcts.root_node.child_nodes:
 print("\n")
 
 print("Max depth is {}".format(mcts.depth(mcts.root_node)))
-print("Nodes explored: {}".format(mcts.noNodes(mcts.root_node)))
+print("Nodes explored: {}".format(mcts.no_nodes(mcts.root_node)))
 
 state_path = mcts.max_path(mcts.root_node, [])
 
@@ -142,7 +141,7 @@ for i, state in enumerate(state_path):
     print(i, state)
 
 
-
+"""
 
 
 

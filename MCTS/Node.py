@@ -30,7 +30,6 @@ class Node:
         possible_child_nodes = self.state.compute_child_states()
         return len(possible_child_nodes) == len(self.child_nodes)
 
-
     def expand(self):
         child_states = self.state.compute_child_states()
         selected_state = child_states[len(self.child_nodes)]
@@ -41,8 +40,6 @@ class Node:
 
         self.child_nodes.append(selected_node)
         return selected_node
-
-
 
     def backpropagate(self, r):
         self.n += 1
@@ -59,7 +56,7 @@ class Node:
         else:
             return 10 ** 5
 
-    def isLeaf(self):
+    def is_leaf(self):
         return len(self.child_nodes) == 0
 
 
