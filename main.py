@@ -32,7 +32,7 @@ def play(human = False, delay = 0):
             #input of AI is depth of minimax
             agent = AI(6)
             game_copy = deepcopy(game)
-            best_move = agent.get_best_move(game_copy, game.get_state(), False,True)
+            best_move = agent.get_best_move(game_copy, game.get_state(), maximizing_player=False,pruning=True)
 
             print("Agent 1 Chooses Hole {}".format(best_move))
             new_state, same_player = game.take(player, best_move, game.get_state())
@@ -47,7 +47,7 @@ def play(human = False, delay = 0):
             # input of AI is depth of minimax
             agent = AI(6)
             game_copy=deepcopy(game)
-            best_move=agent.get_best_move(game_copy,game.get_state(),True,True)
+            best_move=agent.get_best_move(game_copy,game.get_state(),maximizing_player=True,pruning=True)
 
 
             print("Agent 2 Chooses Hole {}".format(best_move))
