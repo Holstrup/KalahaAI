@@ -76,11 +76,12 @@ class Kalaha:
             if hole == self.board_size:
 
                 # Put stone in players Mancala Store
-                self.state[2][row] += 1
-                stones -= 1
+                if row == player:
+                    self.state[2][row] += 1
+                    stones -= 1
 
-                if stones == 0 and row != player:
-                    self.state[3] = int(not player)
+                    if stones == 0 and row != player:
+                        self.state[3] = int(not player)
 
                 # Switch Row
                 if row == 1:
@@ -90,13 +91,6 @@ class Kalaha:
 
                 # Start from hole 0
                 hole = -1
-
-
-                # If we have stones left -> Put in first hole
-                #if stones == 0:
-                #    next_player = int(not player)
-                #    self.state[3] = next_player
-
 
 
             else:

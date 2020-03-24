@@ -45,14 +45,15 @@ class State:
         while stones > 0:
             hole += 1
             # If we need to go from one row to the other (at the end of a row)
-            if hole >= self.board_size:
+            if hole == self.board_size:
 
                 # Put stone in players Mancala Store
-                state[2][row] += 1
-                stones -= 1
+                if row == player:
+                    self.state[2][row] += 1
+                    stones -= 1
 
-                if stones == 0 and row != player:
-                    state[3] = int(not player)
+                    if stones == 0 and row != player:
+                        self.state[3] = int(not player)
 
                 # Switch Row
                 if row == 1:

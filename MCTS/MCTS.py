@@ -41,7 +41,8 @@ class MCTS:
                 max_child = child
         return max_child
 
-    """ Helper Functions """
+
+    """ Analysis Functions """
     def depth(self, node):
         if len(node.child_nodes) == 0:
             return 1
