@@ -4,6 +4,7 @@ import numpy as np
 
 
 import time
+
 class MCTS:
     def __init__(self, init_state=None):
         self.starting_player = 0
@@ -23,7 +24,13 @@ class MCTS:
             if not current_node.is_fully_expanded():
                 return current_node.expand()
             else:
-                current_node = self.most_promising_child(current_node)
+                next_node = self.most_promising_child(current_node)
+
+                if next_node is None:
+                    break
+
+                else:
+                    current_node = next_node
         return current_node
 
     def MCTS(self, n0):
@@ -73,13 +80,15 @@ class MCTS:
         hole, most_visits = None, 0
         for i, child in enumerate(self.root_node.child_nodes):
             if child.n > most_visits:
-                most_visited_child = child
                 most_visits = child.n
-                hole = i
-        return hole, most_visited_child
+                hole = child.state.action
+        return hole
+
+
+
+
 
 """
-
 # 1
 print("MOVE 1")
 mcts = MCTS()

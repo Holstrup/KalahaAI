@@ -1,9 +1,10 @@
 import copy
 
 class State:
-    def __init__(self, board_state):
+    def __init__(self, board_state, action=None):
         self.state = board_state
         self.board_size = 6
+        self.action = action
 
 
     def compute_child_states(self):
@@ -12,7 +13,7 @@ class State:
         for i, hole in enumerate(self.state[player]):
             state_copy = copy.deepcopy(self.state)
             if hole > 0:
-                state_copy = State(self.take(state_copy, i))
+                state_copy = State(self.take(state_copy, i), action=i)
                 child_states.append(state_copy)
         return child_states
 
@@ -49,11 +50,11 @@ class State:
 
                 # Put stone in players Mancala Store
                 if row == player:
-                    self.state[2][row] += 1
+                    state[2][row] += 1
                     stones -= 1
 
                     if stones == 0 and row != player:
-                        self.state[3] = int(not player)
+                        state[3] = int(not player)
 
                 # Switch Row
                 if row == 1:
