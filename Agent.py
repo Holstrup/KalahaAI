@@ -5,7 +5,7 @@ import numpy as np
 
 class Agent:
     def __init__(self):
-        self.search_depth = 6
+        self.search_depth = 4
 
     def evaluate(self, state):
         """
@@ -108,7 +108,7 @@ class Agent:
 
             return best_move, best_value
 
-    def find_next_move(self, game, pruning=False):
+    def find_next_move(self, game, pruning=True):
         if pruning:
             next_move, _ = self.minimax_ab(game, self.search_depth)
         else:

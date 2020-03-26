@@ -3,14 +3,15 @@ import time
 import copy
 from Agent import Agent
 import random
+from MCTS.State import State
+from MCTS.MCTS import MCTS
 
-def main(human = False, delay = 0):
+def main(human = False):
     game = Kalaha(starting_player=0)
     ai_1 = Agent()
     ai_2 = Agent()
 
     while not game.terminal_test():
-        time.sleep(delay)
         player = game.state[3]
 
         if player == game.player1 and human:
@@ -21,15 +22,15 @@ def main(human = False, delay = 0):
 
         elif player == game.player1:
             game_copy = copy.deepcopy(game)
-            hole = ai_1.find_next_move(game_copy)
-            # hole = random.choice(game.possible_actions())
+            hole = monte_carlo_pred(game_copy.state, 3000) # <- MCTS
+            # hole = ai_1.find_next_move(game_copy)
             print("Agent 1 Chooses Hole {}".format(hole))
             game.take(hole)
 
         else:
             game_copy = copy.deepcopy(game)
+            # hole = monte_carlo_pred(game_copy.state, 100) # <- MCTS
             hole = ai_2.find_next_move(game_copy) # <- AI agents action goes here
-            # hole = random.choice(game.possible_actions())
             print("Agent 2 Chooses Hole {}".format(hole))
             game.take(hole)
 
@@ -38,7 +39,16 @@ def main(human = False, delay = 0):
     game.print_board()
 
 
+def monte_carlo_pred(curr_state, iterations):
+    s0 = State(curr_state)
+    mcts = MCTS(s0)
+    for i in range(iterations):
+        n0 = mcts.root_node
+        mcts.MCTS(n0)
+    return mcts.robust_child()
+
+
 
 
 if __name__ == "__main__":
-    main(delay=0.0, human=False)
+    main(human=False)
