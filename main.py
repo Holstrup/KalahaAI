@@ -7,7 +7,9 @@ import time
 
 def play(human = False, delay = 0):
     game = Kalaha()
-    player = game.player1
+    player = game.player2
+    agent1 = AI(4,True,False,False)
+    agent2 = AI(4,True,False,False)
 
     while not game.terminal_test(game.get_state()):
         time.sleep(delay)
@@ -30,9 +32,9 @@ def play(human = False, delay = 0):
 
         elif player == game.player1:
             #input of AI is depth of minimax
-            agent = AI(6)
+
             game_copy = deepcopy(game)
-            best_move = agent.get_best_move(game_copy, game.get_state(), maximizing_player=False,pruning=True)
+            best_move = agent1.get_best_move(game_copy, game.get_state(), maximizing_player=False,pruning=True)
 
             print("Agent 1 Chooses Hole {}".format(best_move))
             new_state, same_player = game.take(player, best_move, game.get_state())
@@ -45,9 +47,9 @@ def play(human = False, delay = 0):
 
         else:
             # input of AI is depth of minimax
-            agent = AI(6)
+
             game_copy=deepcopy(game)
-            best_move=agent.get_best_move(game_copy,game.get_state(),maximizing_player=True,pruning=True)
+            best_move=agent2.get_best_move(game_copy,game.get_state(),maximizing_player=True,pruning=True)
 
 
             print("Agent 2 Chooses Hole {}".format(best_move))
@@ -71,4 +73,4 @@ def play(human = False, delay = 0):
 
 
 if __name__ == "__main__":
-    play(human=True,delay=1)
+    play(delay=0)
