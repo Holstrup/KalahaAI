@@ -23,20 +23,7 @@
     <favorites_list name="KalahaAI" />
   </component>
   <component name="FileEditorManager">
-    <leaf SIDE_TABS_SIZE_LIMIT_KEY="300">
-      <file pinned="false" current-in-tab="true">
-        <entry file="file://$PROJECT_DIR$/README.md">
-          <provider selected="true" editor-type-id="split-provider[text-editor;markdown-preview-editor]">
-            <state split_layout="SPLIT">
-              <first_editor relative-caret-position="285">
-                <caret line="19" lean-forward="true" selection-start-line="19" selection-end-line="19" />
-              </first_editor>
-              <second_editor />
-            </state>
-          </provider>
-        </entry>
-      </file>
-    </leaf>
+    <leaf SIDE_TABS_SIZE_LIMIT_KEY="300" />
   </component>
   <component name="FileTemplateManagerImpl">
     <option name="RECENT_TEMPLATES">
@@ -321,7 +308,7 @@
       <workItem from="1585070387183" duration="4513000" />
       <workItem from="1585161956002" duration="1501000" />
       <workItem from="1585209120442" duration="5172000" />
-      <workItem from="1586086772779" duration="469000" />
+      <workItem from="1586086772779" duration="524000" />
     </task>
     <task id="LOCAL-00001" summary="AI v. AI implemented">
       <created>1583831245901</created>
@@ -418,11 +405,10 @@
     <servers />
   </component>
   <component name="TimeTrackingManager">
-    <option name="totallyTimeSpent" value="81559000" />
+    <option name="totallyTimeSpent" value="81614000" />
   </component>
   <component name="ToolWindowManager">
     <frame x="-1760" y="74" width="1440" height="877" extended-state="0" />
-    <editor active="true" />
     <layout>
       <window_info content_ui="combo" id="Project" order="0" sideWeight="0.4992928" weight="0.18097281" />
       <window_info id="Structure" order="1" side_tool="true" weight="0.25" />
