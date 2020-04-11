@@ -6,12 +6,13 @@ import random
 from MCTS.State import State
 from MCTS.MCTS import MCTS
 
-def main(human = False):
+def main(human = False, delay = 0.5, monte_carlo = False):
     game = Kalaha(starting_player=0)
     ai_1 = Agent()
     ai_2 = Agent()
 
     while not game.terminal_test():
+        time.sleep(delay)
         player = game.state[3]
 
         if player == game.player1 and human:
@@ -22,8 +23,10 @@ def main(human = False):
 
         elif player == game.player1:
             game_copy = copy.deepcopy(game)
-            hole = monte_carlo_pred(game_copy.state, 3000) # <- MCTS
-            # hole = ai_1.find_next_move(game_copy)
+            if monte_carlo:
+                hole = monte_carlo_pred(game_copy.state, 2000) # <- MCTS
+            else:
+                hole = ai_1.find_next_move(game_copy)
             print("Agent 1 Chooses Hole {}".format(hole))
             game.take(hole)
 
@@ -36,6 +39,7 @@ def main(human = False):
 
         game.print_board()
     game.finalize_game()
+    print("Game Finished!")
     game.print_board()
 
 
@@ -51,4 +55,4 @@ def monte_carlo_pred(curr_state, iterations):
 
 
 if __name__ == "__main__":
-    main(human=False)
+    main(human = True, delay = 0.5, monte_carlo = False)

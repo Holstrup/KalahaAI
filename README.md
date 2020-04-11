@@ -5,6 +5,9 @@ Assignment 1 - Introduction to AI
 Make sure you have the necessary packages installed. See requirements.txt, for which packages that is. 
 
 ## How to run
+Simply open the [Run Notebook](./Run_Notebook.ipynb), and follow the instructions in there. 
+
+**Alternatively**: <br>
 Run main.py. Set Human = True if you want to play against the AI. When it's your turn, enter a number between 1-5 and
 press enter after to make your move. 
 
