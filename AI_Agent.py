@@ -28,7 +28,7 @@ class AI:
         :return: Evaluated score based on factor-based heuristic
         """
         if max_player:
-            player=1
+            player = 1
         else:
             player =0
         eval_score = 0
